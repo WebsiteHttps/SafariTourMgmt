@@ -1,36 +1,79 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Safari Tour Company Management</title>
 <style>
-:root{--bg:#f6f8fb;--panel:#fff;--line:#e3e8ef;--text:#0f1722;--muted:#5b6b7b;--accent:#d9822b;--green:#13a877;--danger:#e5484d;--chip:#eef2f7;--radius:10px}
-[data-theme=dark]{--bg:#0f141a;--panel:#161c24;--line:#2a333f;--text:#e8eef5;--muted:#93a1b0;--accent:#f0a04b;--green:#13c08a;--danger:#ff5d5d;--chip:#222c38}
-*{box-sizing:border-box}body{margin:0;font:14px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--text)}
-header{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5;flex-wrap:wrap}
-header h1{font-size:16px;margin:0;color:var(--accent)}nav{display:flex;gap:4px;flex-wrap:wrap;flex:1}
-nav button{background:none;border:0;color:var(--muted);padding:6px 10px;border-radius:8px;cursor:pointer;font:inherit}
-nav button.on{background:var(--chip);color:var(--text);font-weight:600}
-main{max-width:1200px;margin:16px auto;padding:0 16px}
-.bar{display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap}.bar h2{margin:0;flex:1;font-size:18px}
-input,select,textarea{background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:7px 9px;font:inherit;width:100%}
-.bar input{width:220px}
-.btn{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:7px 14px;cursor:pointer;font:inherit;font-weight:600;white-space:nowrap}
-.btn.g{background:var(--chip);color:var(--text)}.btn.d{background:var(--danger)}.btn.s{padding:3px 9px;font-size:12px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:auto}
-table{width:100%;border-collapse:collapse}th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
-th{font-size:12px;color:var(--muted);text-transform:uppercase;background:var(--panel);position:sticky;top:0}td.n{text-align:right}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:14px}
-.kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px}.kpi b{display:block;font-size:20px}.kpi span{color:var(--muted);font-size:12px}
-.chip{padding:2px 8px;border-radius:99px;background:var(--chip);font-size:12px}.chip.Confirmed,.chip.Available,.chip.Active,.chip.Income{background:var(--green);color:#fff}.chip.Expense{background:var(--danger);color:#fff}
-dialog{border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);padding:18px;width:min(900px,96vw);max-height:92vh}
-dialog::backdrop{background:#0008}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
-label{font-size:12px;color:var(--muted);display:block}h3{margin:14px 0 6px;font-size:13px;color:var(--accent);text-transform:uppercase}
-.sum{background:var(--chip);border-radius:var(--radius);padding:12px;margin-top:12px}.sum div{display:flex;justify-content:space-between}.sum .t{font-size:18px;font-weight:700;border-top:1px solid var(--line);margin-top:6px;padding-top:6px}
-.ex{display:grid;grid-template-columns:3fr 1fr 1fr;gap:6px;margin-bottom:4px}
-#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:8px 16px;border-radius:99px;opacity:0;transition:.3s;pointer-events:none}#toast.on{opacity:1}
-.dot{width:10px;height:10px;border-radius:50%;background:#999;display:inline-block}.dot.ok{background:var(--green)}.dot.err{background:var(--danger)}
-.empty{padding:30px;text-align:center;color:var(--muted)}
+:root{color-scheme:light;--bg:#F8FAFC;--panel:#fff;--line:#E5E7EB;--text:#111827;--muted:#6B7280;--accent:#1D4ED8;--btn:#1D4ED8;--on-btn:#fff;--soft:#EFF6FF;--ok:#047857;--on-ok:#fff;--danger:#BE123C;--on-danger:#fff;--chip:#F1F5F9;--radius:12px;--shadow:0 1px 2px rgba(17,24,39,.05),0 1px 3px rgba(17,24,39,.06);--ring:#1D4ED8;--rail:#111827}
+[data-theme=dark]{color-scheme:dark;--bg:#0B1020;--panel:#111827;--line:#263041;--text:#F3F4F6;--muted:#9CA3AF;--accent:#60A5FA;--btn:#60A5FA;--on-btn:#0B1220;--soft:#16233d;--ok:#34D399;--on-ok:#052e22;--danger:#FB7185;--on-danger:#2a0710;--chip:#1b2434;--shadow:none;--ring:#93C5FD;--rail:#070b14}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+:focus-visible{outline:3px solid var(--ring);outline-offset:2px}
+.ic{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.app{display:flex;min-height:100vh}.content{flex:1;min-width:0}
+.prim{width:70px;background:var(--rail);display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 0;position:sticky;top:0;height:100vh;flex:none}
+.prim .logo{color:#fff;margin:2px 0 12px}.prim .sp{flex:1}
+.prim button{width:44px;height:44px;border:0;border-radius:12px;background:none;color:#9CA3AF;display:grid;place-items:center;cursor:pointer;transition:background .15s,color .15s}
+.prim button:hover{background:#1f2937;color:#fff}.prim button.on{background:#1D4ED8;color:#fff}
+.sec{width:clamp(240px,22vw,325px);background:var(--panel);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;padding:20px 16px;flex:none}
+.prof{display:flex;gap:12px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:12px;margin-bottom:20px}
+.prof b{display:block;line-height:1.2}.prof small{color:var(--muted)}
+.av{width:40px;height:40px;border-radius:50%;background:var(--btn);color:var(--on-btn);display:grid;place-items:center;font-weight:700;flex:none}
+.brand{display:flex;gap:10px;align-items:center;font-weight:700;font-size:17px;padding:0 4px;color:var(--accent)}
+.sl{font-size:11px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;font-weight:600;margin:20px 8px 6px}
+#nav button{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;min-height:44px;border:0;border-radius:10px;background:none;color:var(--text);font:inherit;cursor:pointer;text-align:left;transition:background .15s}
+#nav button:hover{background:var(--chip)}#nav button.on{background:var(--soft);color:var(--accent);font-weight:600}
+#nav .b{margin-left:auto;font-size:12px;background:var(--chip);color:var(--muted);padding:1px 8px;border-radius:99px;font-weight:600}#nav .on .b{background:var(--accent);color:var(--on-btn)}
+.top{position:sticky;top:0;z-index:20;display:flex;gap:10px;align-items:center;padding:14px 40px;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(8px);flex-wrap:wrap}
+.search{position:relative;flex:1;min-width:180px;max-width:420px}.search .ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}.search input{padding-left:38px;background:var(--panel)}
+.tb-sp{flex:1}
+.pill{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;font:inherit;cursor:pointer;position:relative}
+.pill:hover{border-color:var(--accent)}.pill.sq{padding:0;width:44px;justify-content:center}.hamb{display:none}
+#bellwrap{position:relative}#bn{position:absolute;top:-7px;right:-7px;min-width:20px;height:20px;border-radius:99px;background:var(--danger);color:var(--on-danger);font-size:11px;font-weight:700;display:grid;place-items:center;padding:0 5px}#bn[hidden]{display:none}
+#panel{position:absolute;right:0;top:calc(100% + 8px);width:min(360px,92vw);background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.2);padding:8px;z-index:30}
+#panel[hidden]{display:none}#panel h3{margin:8px 10px 4px}#panel button{display:block;width:100%;text-align:left;border:0;background:none;color:var(--text);padding:10px;border-radius:8px;cursor:pointer;font:inherit}#panel button:hover{background:var(--chip)}#panel small{display:block;color:var(--muted)}
+main{padding:12px 40px 40px;max-width:1280px}
+.ph{display:flex;gap:16px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;margin:8px 0 24px}.ph h1{margin:0;font-size:30px;letter-spacing:-.02em;line-height:1.15}.ph p{margin:6px 0 0;color:var(--muted)}
+.bar{display:flex;gap:8px;margin-bottom:14px;align-items:center;flex-wrap:wrap}
+input,select,textarea{background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:9px 10px;min-height:40px;font:inherit;font-size:16px;width:100%}input:disabled{opacity:.7}
+.btn{background:var(--btn);color:var(--on-btn);border:0;border-radius:8px;padding:8px 14px;min-height:40px;cursor:pointer;font:inherit;font-weight:600;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;transition:filter .15s,transform .1s}
+.btn:hover{filter:brightness(1.1)}.btn:active{transform:translateY(1px)}
+.btn.g{background:var(--chip);color:var(--text)}.btn.d{background:var(--danger);color:var(--on-danger)}.btn.s{padding:4px 10px;min-height:32px;font-size:13px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:auto;box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse}th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:0}table tr:hover td{background:var(--chip)}
+th{font-size:12px;letter-spacing:.04em;color:var(--muted);text-transform:uppercase;background:var(--panel);position:sticky;top:0;font-weight:600}td.n{text-align:right;font-variant-numeric:tabular-nums}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:24px;margin-bottom:24px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);text-align:left;font:inherit;color:inherit;display:block;width:100%}
+.kpi span{color:var(--muted);font-size:14px;display:block}.kpi b{display:block;font-size:32px;line-height:1.2;margin:4px 0;letter-spacing:-.02em;font-variant-numeric:tabular-nums}.kpi small{font-size:13px;color:var(--muted)}
+button.kpi{cursor:pointer;transition:border-color .15s,transform .15s}button.kpi:hover{border-color:var(--accent);transform:translateY(-1px)}
+.pos{color:var(--ok)!important}.neg{color:var(--danger)!important}
+.chip{padding:2px 10px;border-radius:99px;background:var(--chip);font-size:12px;font-weight:600}.chip.Confirmed,.chip.Available,.chip.Active,.chip.Income{background:var(--ok);color:var(--on-ok)}.chip.Expense{background:var(--danger);color:var(--on-danger)}
+dialog{border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--text);padding:20px;width:min(900px,96vw);max-height:92vh;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog[open]{animation:pop .18s ease-out}@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.99)}}
+dialog::backdrop{background:#0009}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+label{font-size:13px;color:var(--muted);display:block;margin-bottom:3px}h3{margin:18px 0 8px;font-size:12px;letter-spacing:.06em;color:var(--accent);text-transform:uppercase}
+.sum{background:var(--chip);border-radius:var(--radius);padding:14px;margin-top:14px;font-variant-numeric:tabular-nums}.sum div{display:flex;justify-content:space-between;gap:12px;padding:1px 0}.sum .t{font-size:19px;font-weight:700;border-top:1px solid var(--line);margin-top:8px;padding-top:8px}
+.ex{display:grid;grid-template-columns:3fr 1fr 1fr;gap:6px;margin-bottom:6px}
+#toast{position:fixed;bottom:max(18px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:99px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:50;font-weight:500}#toast.on{opacity:1}
+.dot{width:10px;height:10px;border-radius:50%;background:#8a96a3;display:inline-block}.dot.ok{background:var(--ok)}.dot.err{background:var(--danger)}
+.empty{padding:36px;text-align:center;color:var(--muted)}.scrim{display:none}
+@media (pointer:coarse){.btn.s{min-height:40px;padding:6px 12px}}
+@media (max-width:1100px){.sec{width:240px}.top{padding:14px 24px}main{padding:12px 24px 32px}}
+@media (max-width:900px){.prim{display:none}.hamb{display:inline-flex}.sec{position:fixed;left:0;top:0;z-index:40;width:min(86vw,320px);transform:translateX(-100%);transition:transform .22s}
+body.menu .sec{transform:none;box-shadow:0 0 40px rgba(0,0,0,.35)}body.menu .scrim{display:block;position:fixed;inset:0;background:#0007;z-index:35}
+.top{padding:12px 16px}main{padding:8px 16px 28px}.ph h1{font-size:24px}.kpis{gap:14px}.kpi b{font-size:26px}.ex{grid-template-columns:1fr 1fr}.ex input:first-child{grid-column:1/-1}dialog{padding:14px;width:100vw;max-width:100vw;border-radius:14px 14px 0 0;margin:auto 0 0}.tb-sp{display:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style></head><body>
-<header><h1>🦁 Safari Tour Mgmt</h1><nav id="nav"></nav><span id="st" class="dot off"></span><small id="stt" style="color:var(--muted)">Local only</small><button class="btn g" onclick="settings()">⚙️</button><button class="btn g" id="themeBtn" onclick="toggleTheme()">🌙</button></header>
-<main id="main"></main><dialog id="dlg"></dialog><div id="toast"></div>
+<div class="app">
+<aside class="prim" aria-label="Primary navigation"><div class="logo"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></div><div id="pn" style="display:contents"></div><div class="sp"></div><button onclick="settings()" aria-label="Cloud settings" title="Cloud settings"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></aside>
+<div class="scrim" onclick="menu(false)"></div>
+<aside class="sec" id="sec" aria-label="Main menu"><div class="prof"><div class="av" aria-hidden="true">ST</div><div><b>Safari Tours</b><small>Tour operations console</small></div></div>
+<div class="brand"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>Safari Tour Mgmt</div><nav id="nav" aria-label="Sections"></nav></aside>
+<div class="content"><div class="top">
+<button class="pill sq hamb" onclick="menu(true)" aria-label="Open menu"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+<div class="search"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="gs" type="search" placeholder="Search…" aria-label="Search current list" oninput="q=this.value;renderBody()"></div><div class="tb-sp"></div>
+<button class="pill" onclick="settings()" aria-label="Cloud database settings"><span id="st" class="dot off"></span><span id="stt" role="status" aria-live="polite">Local only</span></button>
+<div id="bellwrap"><button class="pill sq" id="bell" onclick="togglePanel(event)" aria-haspopup="true" aria-expanded="false" aria-label="Pending quotations"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg><span id="bn" hidden></span></button><div id="panel" hidden></div></div>
+<button class="pill sq" id="themeBtn" onclick="toggleTheme()" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+</div><main id="main"></main></div></div><dialog id="dlg" aria-label="Details"></dialog><div id="toast" role="status" aria-live="polite"></div>
 <script>
 const SEED={
 clients:[{id:'C-00001',name:'Alpha Ventures',phone:'255710001122',email:'sophia.d@email.com',info:''},{id:'C-00002',name:'Blue Horizon Fund',phone:'255710001122',email:'sarah@bluehorizon.com',info:''}],
@@ -59,7 +102,7 @@ const esc=v=>String(v??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 const money=n=>'$'+(+n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1800)};
 const nextId=(p,a)=>p+'-'+String(Math.max(0,...a.map(x=>+x.id.split('-')[1]||0))+1).padStart(5,'0');
-function applyTheme(t){document.documentElement.dataset.theme=t;$('#themeBtn').textContent=t==='dark'?'☀️':'🌙';localStorage.setItem('theme',t)}
+function applyTheme(t){document.documentElement.dataset.theme=t;$('#themeBtn').innerHTML=t==='dark'?'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>':'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';localStorage.setItem('theme',t)}
 function toggleTheme(){applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark')}
 applyTheme(localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
 /* ---- calculations (always derived, never stored) ---- */
@@ -73,21 +116,34 @@ const nextService=a=>{const d=db.bookings.filter(b=>b.vehicle==a.name&&b.start&&
 /* ---- navigation ---- */
 let tab='bookings',q='';
 const TABS=[['dash','Dashboard'],['bookings','Quotations'],...Object.entries(E).map(([k,v])=>[k,v.t])];
-function nav(){$('#nav').innerHTML=TABS.map(([k,l])=>`<button class="${k==tab?'on':''}" onclick="go('${k}')">${l}</button>`).join('')}
-function go(t){tab=t;q='';render()}
-function render(){nav();tab=='dash'?dash():tab=='bookings'?bookList():list(tab)}
-function bar(title,add){return`<div class="bar"><h2>${title}</h2><input placeholder="Search…" value="${esc(q)}" oninput="q=this.value;renderBody()"><button class="btn" onclick="${add}">+ New</button></div>`}
+const IC={dash:'<rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>',bookings:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/>',clients:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>',employees:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M15 9h3M15 13h3M6 17c.5-1.5 1.7-2 3-2s2.5.5 3 2"/>',vendors:'<path d="M1 3h15v13H1zM16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',tours:'<path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4z"/><path d="M8 2v16M16 6v16"/>',assets:'<path d="M5 17H3v-5l2-5h14l2 5v5h-2"/><circle cx="7.5" cy="17" r="2"/><circle cx="16.5" cy="17" r="2"/><path d="M3 12h18"/>',accounting:'<path d="M20 12V8a2 2 0 0 0-2-2H5a2 2 0 0 1 0-4h13"/><path d="M3 5v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/>'};
+const ico=k=>`<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg>`;
+const LBL={dash:'Dashboard',bookings:'Quotations',...Object.fromEntries(Object.entries(E).map(([k,v])=>[k,v.t]))};
+const GROUPS=[['Overview',['dash','bookings']],['Directory',['clients','employees','vendors']],['Operations',['tours','assets']],['Finance',['accounting']]];
+const PAGE={dash:['Business overview','Quotations, revenue and profit across your tour operations'],bookings:['Pricing & quotations','Build quotes with live pricing, markups and discounts'],clients:['Clients','Everyone you run tours for'],employees:['Employees','Guides, drivers and office staff'],vendors:['Vendors','Land and air transport suppliers and their standard rates'],tours:['Tours','Tour catalogue with low, shoulder and high season prices'],assets:['Assets','Vehicles and equipment, with the next scheduled service'],accounting:['Accounting','Income and expenses, newest first']};
+const count=k=>k=='dash'?'':(db[k]||[]).length;
+function nav(){$('#nav').innerHTML=GROUPS.map(([g,ks])=>`<div class="sl">${g}</div>`+ks.map(k=>`<button class="${k==tab?'on':''}" ${k==tab?'aria-current="page"':''} onclick="go('${k}')">${ico(k)}<span>${LBL[k]}</span>${count(k)!==''?`<span class="b">${count(k)}</span>`:''}</button>`).join('')).join('');
+$('#pn').innerHTML=GROUPS.flatMap(g=>g[1]).map(k=>`<button class="${k==tab?'on':''}" ${k==tab?'aria-current="page"':''} onclick="go('${k}')" aria-label="${LBL[k]}" title="${LBL[k]}">${ico(k)}</button>`).join('');
+$('#gs').disabled=tab=='dash';$('#gs').placeholder=tab=='dash'?'Search is available on list pages':'Search '+LBL[tab].toLowerCase()+'…'}
+function bell(){const n=db.bookings.filter(b=>b.status=='Pending').length;$('#bn').textContent=n;$('#bn').hidden=!n;$('#bell').setAttribute('aria-label',n+' pending quotation'+(n==1?'':'s'))}
+function chrome(){nav();bell()}
+function togglePanel(e){e.stopPropagation();const el=$('#panel');if(!el.hidden){el.hidden=true;$('#bell').setAttribute('aria-expanded','false');return}
+const p=db.bookings.filter(b=>b.status=='Pending');el.innerHTML='<h3>Pending quotations</h3>'+(p.length?p.map(b=>`<button onclick="openPending('${b.id}')"><b>${b.id}</b> · ${esc(b.client)}<small>${esc(b.tour)} · ${money(calc(b).total)}</small></button>`).join(''):'<div class="empty">Nothing pending</div>');el.hidden=false;$('#bell').setAttribute('aria-expanded','true')}
+function openPending(id){$('#panel').hidden=true;go('bookings');openB(id)}
+const menu=o=>document.body.classList.toggle('menu',o);
+document.addEventListener('click',e=>{if(!e.target.closest('#bellwrap')){$('#panel').hidden=true;$('#bell').setAttribute('aria-expanded','false')}});
+document.addEventListener('keydown',e=>{if(e.key=='Escape'){$('#panel').hidden=true;menu(false)}});
+function go(t){tab=t;q='';$('#gs').value='';menu(false);window.scrollTo(0,0);render()}
+function render(){tab=='dash'?dash():tab=='bookings'?bookList():list(tab)}
+function head(add){const[t,d]=PAGE[tab];chrome();return`<div class="ph"><div><h1>${t}</h1><p>${d}</p></div>${add?`<button class="btn" onclick="${add}">+ New</button>`:''}</div>`}
+function bar(title,add){return head(add)}
 let bodyFn=()=>'';
 function renderBody(){const el=$('#body');if(el)el.innerHTML=bodyFn()}
-function dash(){const c=db.bookings.map(b=>({b,c:calc(b)})),sum=a=>a.reduce((s,x)=>s+x.c.total,0);
-const inc=db.accounting.filter(x=>x.category=='Income').reduce((s,x)=>s+ +x.amount,0),exp=db.accounting.filter(x=>x.category=='Expense').reduce((s,x)=>s+ +x.amount,0);
-$('#main').innerHTML=`<div class="bar"><h2>Dashboard</h2></div><div class="kpis">
-<div class="kpi"><span>Total quotations</span><b>${c.length}</b></div>
-<div class="kpi"><span>Confirmed value</span><b>${money(sum(c.filter(x=>x.b.status=='Confirmed')))}</b></div>
-<div class="kpi"><span>Pending value</span><b>${money(sum(c.filter(x=>x.b.status=='Pending')))}</b></div>
-<div class="kpi"><span>Total income</span><b>${money(inc)}</b></div><div class="kpi"><span>Total expense</span><b>${money(exp)}</b></div>
-<div class="kpi"><span>Total profit</span><b>${money(inc-exp)}</b></div></div>
-<div class="bar"><button class="btn g" onclick="exportJSON()">⬇ Backup data</button><button class="btn g" onclick="$('#imp').click()">⬆ Restore backup</button><button class="btn d" onclick="resetData()">Reset to original data</button><input type="file" id="imp" hidden accept=".json" onchange="importJSON(this)"></div>`}
+function dash(){const c=db.bookings.map(b=>({b,c:calc(b)})),sum=a=>a.reduce((s,x)=>s+x.c.total,0),cf=c.filter(x=>x.b.status=='Confirmed'),pd=c.filter(x=>x.b.status=='Pending');
+const ai=db.accounting.filter(x=>x.category=='Income'),ae=db.accounting.filter(x=>x.category=='Expense'),inc=ai.reduce((s,x)=>s+ +x.amount,0),exp=ae.reduce((s,x)=>s+ +x.amount,0);
+const K=(l,v,s,to,cls)=>`<button class="kpi" onclick="go('${to}')"><span>${l}</span><b class="${cls||''}">${v}</b><small class="${cls||''}">${s}</small></button>`;
+$('#main').innerHTML=head()+`<div class="kpis">`+K('Total quotations',c.length,`${cf.length} confirmed · ${pd.length} pending`,'bookings')+K('Confirmed value',money(sum(cf)),`${cf.length} confirmed booking${cf.length==1?'':'s'}`,'bookings','pos')+K('Pending value',money(sum(pd)),`${pd.length} awaiting confirmation`,'bookings')+K('Total income',money(inc),`${ai.length} entries`,'accounting')+K('Total expense',money(exp),`${ae.length} entries`,'accounting')+K('Total profit',money(inc-exp),inc>=exp?'Net positive':'Net negative','accounting',inc>=exp?'pos':'neg')+`</div>
+<h3>Data</h3><div class="bar"><button class="btn g" onclick="exportJSON()">Backup data</button><button class="btn g" onclick="$('#imp').click()">Restore backup</button><button class="btn d" onclick="resetData()">Reset to original data</button><input type="file" id="imp" hidden accept=".json" onchange="importJSON(this)"></div>`}
 function exportJSON(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,1)]));a.download='safari-backup.json';a.click()}
 function importJSON(i){const r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);save();if(SB)cloudPushAll().catch(e=>toast(e.message));render();toast('Restored')}catch(e){toast('Invalid file')}};r.readAsText(i.files[0])}
 function resetData(){if(confirm('Replace all data with the original workbook data?')){db=structuredClone(SEED);save();if(SB)cloudPushAll().catch(e=>toast(e.message));render();toast('Reset done')}}
@@ -96,7 +152,7 @@ function list(k){const C=E[k];bodyFn=()=>{const cols=C.f.filter(f=>f[0]!='info')
 let rows=db[k].filter(r=>JSON.stringify(r).toLowerCase().includes(q.toLowerCase()));
 if(k=='accounting')rows=[...rows].sort((a,b)=>a.date<b.date?1:-1);
 if(!rows.length)return'<div class="empty">No records</div>';
-return`<table><tr><th>ID</th>${cols.map(f=>`<th>${f[1]}</th>`).join('')}${extra.map(e=>`<th>${e}</th>`).join('')}<th></th></tr>`+rows.map(r=>`<tr><td>${r.id}</td>${cols.map(f=>`<td class="${f[2]=='number'?'n':''}">${['status','category'].includes(f[0])&&f[2]?`<span class="chip ${esc(r[f[0]])}">${esc(r[f[0]])}</span>`:f[2]=='number'?(+r[f[0]]||0).toLocaleString():esc(r[f[0]])}</td>`).join('')}${k=='assets'?`<td>${nextService(r)}</td>`:''}<td><button class="btn g s" onclick="edit('${k}','${r.id}')">Edit</button> <button class="btn d s" onclick="del('${k}','${r.id}')">Del</button></td></tr>`).join('')+'</table>'};
+return`<table><tr><th>ID</th>${cols.map(f=>`<th>${f[1]}</th>`).join('')}${extra.map(e=>`<th>${e}</th>`).join('')}<th></th></tr>`+rows.map(r=>`<tr><td>${r.id}</td>${cols.map(f=>`<td class="${f[2]=='number'?'n':''}">${['status','category'].includes(f[0])&&f[2]?`<span class="chip ${esc(r[f[0]])}">${esc(r[f[0]])}</span>`:f[2]=='number'?(+r[f[0]]||0).toLocaleString():esc(r[f[0]])}</td>`).join('')}${k=='assets'?`<td>${nextService(r)}</td>`:''}<td><button class="btn g s" onclick="edit('${k}','${r.id}')">Edit</button> <button class="btn d s" onclick="del('${k}','${r.id}')">Delete</button></td></tr>`).join('')+'</table>'};
 let tot='';if(k=='accounting'){const i=db.accounting.filter(x=>x.category=='Income').reduce((s,x)=>s+ +x.amount,0),e=db.accounting.filter(x=>x.category=='Expense').reduce((s,x)=>s+ +x.amount,0);tot=`<div class="kpis"><div class="kpi"><span>Total Income</span><b>${money(i)}</b></div><div class="kpi"><span>Total Expense</span><b>${money(e)}</b></div><div class="kpi"><span>Total Profit</span><b>${money(i-e)}</b></div></div>`}
 $('#main').innerHTML=bar(C.t,`edit('${k}')`)+tot+'<div class="card" id="body"></div>';renderBody()}
 function edit(k,id){const C=E[k],r=id?db[k].find(x=>x.id==id):{id:nextId(C.p,db[k])};
@@ -110,7 +166,7 @@ function del(k,id){if(confirm('Delete '+id+'?')){db[k]=db[k].filter(x=>x.id!=id)
 /* ---- quotations ---- */
 function bookList(){bodyFn=()=>{const rows=db.bookings.filter(r=>JSON.stringify(r).toLowerCase().includes(q.toLowerCase()));
 if(!rows.length)return'<div class="empty">No quotations</div>';
-return`<table><tr><th>ID</th><th>Client</th><th>Tour/Trip</th><th>Season</th><th>Start</th><th>Days</th><th>Group</th><th>Total</th><th>Status</th><th></th></tr>`+rows.map(b=>{const c=calc(b);return`<tr><td>${b.id}</td><td>${esc(b.client)}</td><td>${esc(b.tour)}</td><td>${b.season}</td><td>${b.start}</td><td>${c.days}</td><td>${b.group}</td><td class="n">${money(c.total)}</td><td><span class="chip ${b.status}">${b.status}</span></td><td><button class="btn g s" onclick="openB('${b.id}')">Edit</button> <button class="btn g s" onclick="printQ('${b.id}')">Print</button> <button class="btn d s" onclick="delB('${b.id}')">Del</button></td></tr>`}).join('')+'</table>'};
+return`<table><tr><th>ID</th><th>Client</th><th>Tour/Trip</th><th>Season</th><th>Start</th><th>Days</th><th>Group</th><th>Total</th><th>Status</th><th></th></tr>`+rows.map(b=>{const c=calc(b);return`<tr><td>${b.id}</td><td>${esc(b.client)}</td><td>${esc(b.tour)}</td><td>${b.season}</td><td>${b.start}</td><td>${c.days}</td><td>${b.group}</td><td class="n">${money(c.total)}</td><td><span class="chip ${b.status}">${b.status}</span></td><td><button class="btn g s" onclick="openB('${b.id}')">Edit</button> <button class="btn g s" onclick="printQ('${b.id}')">Print</button> <button class="btn d s" onclick="delB('${b.id}')">Delete</button></td></tr>`}).join('')+'</table>'};
 $('#main').innerHTML=bar('Pricing & Quotations',"openB()")+'<div class="card" id="body"></div>';renderBody()}
 const names=a=>a.map(x=>x.name);
 function openB(id){const b=id?db.bookings.find(x=>x.id==id):{id:nextId('P',db.bookings),client:'',group:1,tour:'',season:'Low Season',start:'',end:'',mk:0,lv:'',lm:1,lmk:0,av:'',am:1,amk:0,extras:[],disc:0,guide:'',driver:'',vehicle:'',status:'Pending'};
@@ -154,9 +210,11 @@ async function initCloud(){if(!SB){status('off','Local only');return}status('off
 try{const d={};for(const k of Object.keys(MAP))d[k]=(await sb(TBL(k)+'?select=*&order=id')).map(r=>fromDB(k,r));
 const empty=Object.values(d).every(a=>!a.length);if(empty){if(confirm('Cloud database is empty. Upload the current data to it?'))await cloudPushAll()}else{db=d;save()}
 status('ok','Cloud synced');render()}catch(e){status('err','Cloud error');toast(e.message)}}
-function settings(){$('#dlg').innerHTML=`<h2>⚙️ Cloud database (Supabase)</h2><p style="color:var(--muted)">Paste the Project URL and anon public key from Supabase → Project Settings → API. Leave empty to stay local.</p>
+function settings(){$('#dlg').innerHTML=`<h2>Cloud database (Supabase)</h2><p style="color:var(--muted)">Paste the Project URL and anon public key from Supabase → Project Settings → API. Leave empty to stay local.</p>
 <label>Project URL</label><input id="sbu" placeholder="https://xxxx.supabase.co" value="${esc(SB?.url||'')}"><label style="margin-top:8px">anon public key</label><input id="sbk" value="${esc(SB?.key||'')}">
 <div class="bar" style="margin-top:14px;justify-content:flex-end"><button class="btn g" onclick="$('#dlg').close()">Close</button><button class="btn d" onclick="sbSave(true)">Disconnect</button><button class="btn" onclick="sbSave()">Save &amp; connect</button></div>`;$('#dlg').showModal()}
 function sbSave(off){if(off){SB=null;localStorage.removeItem('safari_sb')}else{SB={url:$('#sbu').value.trim(),key:$('#sbk').value.trim()};localStorage.setItem('safari_sb',JSON.stringify(SB))}$('#dlg').close();initCloud()}
 render();initCloud();
+/* a11y: link each label to its field inside dialogs */
+let _lid=0;new MutationObserver(()=>{$$('#dlg label').forEach(l=>{const f=l.nextElementSibling;if(f&&/^(INPUT|SELECT|TEXTAREA)$/.test(f.tagName)&&!l.htmlFor){f.id=f.id||'f'+(++_lid);l.htmlFor=f.id}})}).observe($('#dlg'),{childList:true,subtree:true});
 </script></body></html>
