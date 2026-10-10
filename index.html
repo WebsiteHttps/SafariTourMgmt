@@ -165,6 +165,7 @@ function ckTd(id){return`<td class="ck"><input type="checkbox" class="rk" aria-l
 function tog(id,on){on?picked.add(id):picked.delete(id);const tr=event.target.closest('tr');if(tr)tr.classList.toggle('sel',on);updSel()}
 document.addEventListener('click',e=>{const tr=e.target.closest('#body tr[data-id]');if(!tr||e.target.closest('input,button,a,select,label'))return;
 picked=new Set([tr.dataset.id]);$$('#body tr[data-id]').forEach(r=>{const on=picked.has(r.dataset.id);r.classList.toggle('sel',on);const c=r.querySelector('input.rk');if(c)c.checked=on});updSel()});
+document.addEventListener('keydown',e=>{const t=e.target;if(t&&t.tagName=='SELECT'&&t.closest('#dlg')&&(e.key=='Delete'||e.key=='Backspace')){e.preventDefault();t.value='';t.dispatchEvent(new Event('input',{bubbles:true}))}});
 function togAll(on){vis.forEach(id=>on?picked.add(id):picked.delete(id));$$('#body input.rk[aria-label^="Select "]').forEach(c=>{c.checked=on;c.closest('tr').classList.toggle('sel',on)});updSel()}
 function updSel(){const ids=new Set(db[curKey()]?.map(r=>r.id)||[]);picked=new Set([...picked].filter(i=>ids.has(i)));const n=picked.size,g=id=>document.getElementById(id);
 if(g('selinfo'))g('selinfo').textContent=n?n+' selected':'';
@@ -195,7 +196,7 @@ $('#main').innerHTML=bar(C.t,`edit('${k}')`)+tot+'<div class="card" id="body"></
 function edit(k,id){const C=E[k],r=id?db[k].find(x=>x.id==id):{id:nextId(C.p,db[k])};
 $('#dlg').innerHTML=`<form method="dialog" onsubmit="return false"><h2>${id?'Edit':'New'} ${C.t.replace(/s$/,'')} · ${r.id}</h2><div class="grid">${C.f.map(f=>`<div><label>${f[1]}</label>${Array.isArray(f[2])?sel(f[0],f[2],r[f[0]]):`<input name="${f[0]}" type="${f[2]||'text'}" ${f[2]=='number'?'step="any"':''} value="${esc(r[f[0]]??'')}">`}</div>`).join('')}</div>
 <div class="bar" style="margin-top:14px;justify-content:flex-end"><button class="btn g" onclick="$('#dlg').close()">Cancel</button><button class="btn" onclick="saveRec('${k}','${r.id}',${!!id})">Save</button></div></form>`;$('#dlg').showModal()}
-const sel=(n,o,v,blank)=>`<select name="${n}">${blank?'<option value=""></option>':''}${(v&&!o.includes(v)?[...o,v]:o).map(x=>`<option ${x==v?'selected':''}>${esc(x)}</option>`).join('')}</select>`;
+const sel=(n,o,v)=>`<select name="${n}"><option value="" ${v?'':'selected'}></option>${(v&&!o.includes(v)?[...o,v]:o).map(x=>`<option ${x==v?'selected':''}>${esc(x)}</option>`).join('')}</select>`;
 function saveRec(k,id,isEdit){const C=E[k],f=$('#dlg form'),r={id};C.f.forEach(([n,,t])=>{const v=f.elements[n].value;r[n]=t=='number'?(+v||0):v});
 if(!r[C.f[0][0]]&&k!='accounting'){toast('Name is required');return}
 if(isEdit)db[k]=db[k].map(x=>x.id==id?r:x);else db[k].push(r);save();cloudUp(k,r);$('#dlg').close();list(k);toast('Saved')}
@@ -206,9 +207,12 @@ if(!rows.length){vis=[];return'<div class="empty">No quotations</div>'}
 vis=rows.map(r=>r.id);return`<table><tr>${ckTh()}<th>ID</th><th>Client</th><th>Tour/Trip</th><th>Season</th><th>Start</th><th>Days</th><th>Group</th><th>Total</th><th>Status</th></tr>`+rows.map(b=>{const c=calc(b);return`<tr data-id="${b.id}" class="${picked.has(b.id)?'sel':''}">${ckTd(b.id)}<td>${b.id}</td><td>${esc(b.client)}</td><td>${esc(b.tour)}</td><td>${b.season}</td><td>${b.start}</td><td>${c.days}</td><td>${b.group}</td><td class="n">${money(c.total)}</td><td><span class="chip ${b.status}">${b.status}</span></td></tr>`}).join('')+'</table>'};
 $('#main').innerHTML=bar('Pricing & Quotations',"openB()")+'<div class="card" id="body"></div>';renderBody()}
 const names=a=>a.map(x=>x.name);
-function openB(id){const b=id?db.bookings.find(x=>x.id==id):{id:nextId('P',db.bookings),client:'',group:1,tour:'',season:'Low Season',start:'',end:'',mk:0,lv:'',lm:1,lmk:0,av:'',am:1,amk:0,extras:[],disc:0,guide:'',driver:'',vehicle:'',status:'Pending'};
+const exRow=(i,d,u)=>`<div class="ex"><input name="d${i}" placeholder="Description" value="${esc(d||'')}"><input name="u${i}" type="number" step="any" placeholder="Unit $" value="${u||''}"><input disabled class="xt" value=""></div>`;
+function addEx(){const c=$('#exs');c.insertAdjacentHTML('beforeend',exRow(c.children.length));live()}
+function rmEx(){const c=$('#exs');if(c.children.length>1)c.lastElementChild.remove();else c.querySelectorAll('input').forEach(i=>{if(!i.disabled)i.value=''});live()}
+function openB(id){const b=id?db.bookings.find(x=>x.id==id):{id:nextId('P',db.bookings),client:'',group:1,tour:'',season:'',start:'',end:'',mk:0,lv:'',lm:1,lmk:0,av:'',am:1,amk:0,extras:[],disc:0,guide:'',driver:'',vehicle:'',status:''};
 const N=(n,l,v,s)=>`<div><label>${l}</label><input name="${n}" type="number" step="${s||'any'}" min="0" value="${v}"></div>`,P=(n,l,v)=>N(n,l,+(v*100).toFixed(2));
-const ex=Array.from({length:13},(_,i)=>`<div class="ex"><input name="d${i}" placeholder="Description" value="${esc(b.extras[i]?.d||'')}"><input name="u${i}" type="number" step="any" placeholder="Unit $" value="${b.extras[i]?.u||''}"><input disabled class="xt" value=""></div>`).join('');
+const ex=Array.from({length:Math.max(1,b.extras.length)},(_,i)=>exRow(i,b.extras[i]?.d,b.extras[i]?.u)).join('');
 $('#dlg').innerHTML=`<form onsubmit="return false" oninput="live()"><h2>${id?'Edit':'New'} Quotation · ${b.id}</h2>
 <h3>Tour / Trip</h3><div class="grid"><div><label>Client *</label>${sel('client',names(db.clients),b.client,1)}</div>${N('group','Group Size',b.group,1)}
 <div><label>Tour/Trip *</label>${sel('tour',names(db.tours),b.tour,1)}</div><div><label>Season</label>${sel('season',SEASONS,b.season)}</div>
@@ -216,12 +220,12 @@ $('#dlg').innerHTML=`<form onsubmit="return false" oninput="live()"><h2>${id?'Ed
 <h3>Transportation</h3><div class="grid"><div><label>Land vendor</label>${sel('lv',names(db.vendors.filter(v=>v.category=='Land transport')),b.lv,1)}</div>${N('lm','Land multiplier',b.lm)}${P('lmk','Land markup %',b.lmk)}
 <div><label>Air vendor</label>${sel('av',names(db.vendors.filter(v=>v.category=='Air transport')),b.av,1)}</div>${N('am','Air multiplier',b.am)}${P('amk','Air markup %',b.amk)}</div>
 <h3>Extra details</h3><div class="grid"><div><label>Guide</label>${sel('guide',names(db.employees.filter(e=>/guide/i.test(e.role))),b.guide,1)}</div><div><label>Driver</label>${sel('driver',names(db.employees.filter(e=>e.role=='Driver')),b.driver,1)}</div><div><label>Vehicle</label>${sel('vehicle',names(db.assets.filter(a=>a.category=='Vehicle')),b.vehicle,1)}</div></div>
-<h3>Multi-day fees (unit cost × group × days)</h3>${ex}
+<h3>Multi-day fees (unit cost × group × days)</h3><div id="exs">${ex}</div><div class="bar" style="margin-top:8px"><button type="button" class="btn g s" onclick="addEx()">+ Add</button><button type="button" class="btn g s" onclick="rmEx()">− Remove</button></div>
 <div class="grid" style="margin-top:10px">${P('disc','Discount %',b.disc)}<div><label>Status</label>${sel('status',STAT,b.status)}</div></div><div class="sum" id="sum"></div>
 <div class="bar" style="margin-top:14px;justify-content:flex-end"><button class="btn g" onclick="$('#dlg').close()">Cancel</button><button class="btn g" onclick="printQ(null,collect('${b.id}'))">Print</button><button class="btn" onclick="saveB('${b.id}',${!!id})">Save</button></div></form>`;$('#dlg').showModal();live()}
 function collect(id){const f=$('#dlg form').elements,v=n=>f[n].value,p=n=>(+v(n)||0)/100;
 return{id,client:v('client'),group:+v('group')||1,tour:v('tour'),season:v('season'),start:v('start'),end:v('end'),mk:p('mk'),lv:v('lv'),lm:+v('lm')||1,lmk:p('lmk'),av:v('av'),am:+v('am')||1,amk:p('amk'),
-extras:Array.from({length:13},(_,i)=>({d:v('d'+i),u:+v('u'+i)||0})).filter(x=>x.d||x.u),disc:p('disc'),guide:v('guide'),driver:v('driver'),vehicle:v('vehicle'),status:v('status')}}
+extras:Array.from({length:$$('#exs .ex').length},(_,i)=>({d:v('d'+i),u:+v('u'+i)||0})).filter(x=>x.d||x.u),disc:p('disc'),guide:v('guide'),driver:v('driver'),vehicle:v('vehicle'),status:v('status')}}
 function live(){const b=collect('x'),c=calc(b),row=(l,v)=>`<div><span>${l}</span><span>${money(v)}</span></div>`;
 $$('.xt').forEach((e,i)=>e.value=money((+$('#dlg form').elements['u'+i].value||0)*Math.max(b.group,1)*c.days));
 $('#sum').innerHTML=`<div><span>Season price · ${c.days} day(s) · ${esc(c.type)}</span><span>${money(c.sp)}</span></div>${row('Tour/Trip price',c.trip)}${row('After markup',c.tripM)}${row('Land transport (cost → after markup)',c.lcM)}${row('Air transport (after markup)',c.acM)}${row('Multi-day fees',c.multi)}${row('Subtotal',c.sub)}<div class="t"><span>Total after discount</span><span>${money(c.total)}</span></div>`}
