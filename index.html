@@ -9,7 +9,7 @@ body{margin:0;font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans
 .ic{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .app{display:flex;min-height:100vh}.content{flex:1;min-width:0}
 .prim{width:70px;background:var(--rail);display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 0;position:sticky;top:0;height:100vh;flex:none}
-.prim .logo{color:#fff;margin:2px 0 12px}.prim .sp{flex:1}
+.prim #sideBtn{color:#fff;margin:2px 0 12px}.prim .sp{flex:1}
 .prim button{width:44px;height:44px;border:0;border-radius:12px;background:none;color:#9CA3AF;display:grid;place-items:center;cursor:pointer;transition:background .15s,color .15s}
 .prim button:hover{background:#1f2937;color:#fff}.prim button.on{background:#1D4ED8;color:#fff}
 .sec{width:clamp(240px,22vw,325px);background:var(--panel);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;padding:20px 16px;flex:none}
@@ -77,18 +77,15 @@ tr.sel td{background:var(--soft)}
 .ab.dg:hover{background:color-mix(in srgb,var(--danger) 14%,transparent);color:var(--danger)}
 @media (pointer:coarse){.ab{width:40px;height:40px}}
 .sec{transition:width .22s,padding .22s}
-.sidebtn{display:inline-flex}
 @media (min-width:901px){body.sidecol .sec{width:0;padding-left:0;padding-right:0;border-right:0;overflow:hidden}}
-@media (max-width:900px){.sidebtn{display:none}}
 </style></head><body>
 <div class="app">
-<aside class="prim" aria-label="Primary navigation"><div class="logo"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></div><div id="pn" style="display:contents"></div><div class="sp"></div><button onclick="settings()" aria-label="Cloud settings" title="Cloud settings"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></aside>
+<aside class="prim" aria-label="Primary navigation"><button class="logo sidebtn" id="sideBtn" onclick="toggleSide()" aria-label="Collapse menu" title="Collapse menu" aria-expanded="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button><div id="pn" style="display:contents"></div><div class="sp"></div><button onclick="settings()" aria-label="Cloud settings" title="Cloud settings"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></aside>
 <div class="scrim" onclick="menu(false)"></div>
 <aside class="sec" id="sec" aria-label="Main menu"><div class="prof"><div class="av" aria-hidden="true">ST</div><div><b>Safari Tours</b><small>Tour operations console</small></div></div>
 <div class="brand"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>Safari Tour Mgmt</div><nav id="nav" aria-label="Sections"></nav></aside>
 <div class="content"><div class="top">
 <button class="pill sq hamb" onclick="menu(true)" aria-label="Open menu"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
-<button class="pill sq sidebtn" id="sideBtn" onclick="toggleSide()" aria-label="Collapse menu" title="Collapse menu" aria-expanded="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button>
 <div class="search"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="gs" type="search" placeholder="Search…" aria-label="Search current list" oninput="q=this.value;renderBody()"></div><div class="tb-sp"></div>
 <button class="pill" onclick="settings()" aria-label="Cloud database settings"><span id="st" class="dot off"></span><span id="stt" role="status" aria-live="polite">Local only</span></button>
 <button class="pill sq" id="themeBtn" onclick="toggleTheme()" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
