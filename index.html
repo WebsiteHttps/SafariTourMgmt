@@ -1,0 +1,162 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Safari Tour Company Management</title>
+<style>
+:root{--bg:#f6f8fb;--panel:#fff;--line:#e3e8ef;--text:#0f1722;--muted:#5b6b7b;--accent:#d9822b;--green:#13a877;--danger:#e5484d;--chip:#eef2f7;--radius:10px}
+[data-theme=dark]{--bg:#0f141a;--panel:#161c24;--line:#2a333f;--text:#e8eef5;--muted:#93a1b0;--accent:#f0a04b;--green:#13c08a;--danger:#ff5d5d;--chip:#222c38}
+*{box-sizing:border-box}body{margin:0;font:14px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--text)}
+header{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5;flex-wrap:wrap}
+header h1{font-size:16px;margin:0;color:var(--accent)}nav{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+nav button{background:none;border:0;color:var(--muted);padding:6px 10px;border-radius:8px;cursor:pointer;font:inherit}
+nav button.on{background:var(--chip);color:var(--text);font-weight:600}
+main{max-width:1200px;margin:16px auto;padding:0 16px}
+.bar{display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap}.bar h2{margin:0;flex:1;font-size:18px}
+input,select,textarea{background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:7px 9px;font:inherit;width:100%}
+.bar input{width:220px}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:7px 14px;cursor:pointer;font:inherit;font-weight:600;white-space:nowrap}
+.btn.g{background:var(--chip);color:var(--text)}.btn.d{background:var(--danger)}.btn.s{padding:3px 9px;font-size:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:auto}
+table{width:100%;border-collapse:collapse}th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:12px;color:var(--muted);text-transform:uppercase;background:var(--panel);position:sticky;top:0}td.n{text-align:right}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:14px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px}.kpi b{display:block;font-size:20px}.kpi span{color:var(--muted);font-size:12px}
+.chip{padding:2px 8px;border-radius:99px;background:var(--chip);font-size:12px}.chip.Confirmed,.chip.Available,.chip.Active,.chip.Income{background:var(--green);color:#fff}.chip.Expense{background:var(--danger);color:#fff}
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);padding:18px;width:min(900px,96vw);max-height:92vh}
+dialog::backdrop{background:#0008}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+label{font-size:12px;color:var(--muted);display:block}h3{margin:14px 0 6px;font-size:13px;color:var(--accent);text-transform:uppercase}
+.sum{background:var(--chip);border-radius:var(--radius);padding:12px;margin-top:12px}.sum div{display:flex;justify-content:space-between}.sum .t{font-size:18px;font-weight:700;border-top:1px solid var(--line);margin-top:6px;padding-top:6px}
+.ex{display:grid;grid-template-columns:3fr 1fr 1fr;gap:6px;margin-bottom:4px}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:8px 16px;border-radius:99px;opacity:0;transition:.3s;pointer-events:none}#toast.on{opacity:1}
+.dot{width:10px;height:10px;border-radius:50%;background:#999;display:inline-block}.dot.ok{background:var(--green)}.dot.err{background:var(--danger)}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+</style></head><body>
+<header><h1>🦁 Safari Tour Mgmt</h1><nav id="nav"></nav><span id="st" class="dot off"></span><small id="stt" style="color:var(--muted)">Local only</small><button class="btn g" onclick="settings()">⚙️</button><button class="btn g" id="themeBtn" onclick="toggleTheme()">🌙</button></header>
+<main id="main"></main><dialog id="dlg"></dialog><div id="toast"></div>
+<script>
+const SEED={
+clients:[{id:'C-00001',name:'Alpha Ventures',phone:'255710001122',email:'sophia.d@email.com',info:''},{id:'C-00002',name:'Blue Horizon Fund',phone:'255710001122',email:'sarah@bluehorizon.com',info:''}],
+employees:[['E-00001','Alice M.','Safari Guide','255710001122','alice@ourcompany.co.tz'],['E-00002','Bob K.','Driver','255713334455','bob@ourcompany.co.tz'],['E-00003','Charlie V.','Mountain Guide','255715556677','charlie@ourcompany.co.tz'],['E-00004','Diana P.','Office Manager','255710009992','diana@ourcompany.co.tz']].map(a=>({id:a[0],name:a[1],role:a[2],phone:a[3],email:a[4],status:'Active',info:''})),
+vendors:[{id:'V-00001',name:'FlyXYZ',category:'Air transport',contact:'Mr. K. Mollel',phone:'255767000111',email:'lodges@example.com',rate:2000,info:''},{id:'V-00002',name:'Arusha Car Hire Co.',category:'Land transport',contact:'Jane Driver',phone:'255754123123',email:'arushacar@example.com',rate:100,info:''}],
+tours:[['Ngorongoro Farm House Standard Room (single)',159,208,259],['Ngorongoro Farm House Standard Room (Double)',113,146,179],['Ngorongoro Farm House Standard Room (triple)',99,127,155],['Ngorongoro Farm House Suite room (single)',239,290,341],['Ngorongoro Farm House Suite room (Double)',166,200,234]].map((a,i)=>({id:'T-0000'+(i+1),name:a[0],type:'Adventure',low:a[1],shoulder:a[2],high:a[3],info:''})),
+assets:[['LandCruiser A','4x4 Jeep (7-seater)','2025-01-01'],['LandCruiser B','4x4 Jeep (5-seater)','2025-02-02'],['Minibus 1','Toyota Coaster (15-seat)','2025-07-07']].map((a,i)=>({id:'A-0000'+(i+1),name:a[0],category:'Vehicle',details:a[1],bought:a[2],status:'Available',info:''})),
+accounting:[['I-00001','2025-01-01','Received deposit – John Doe Safari','Income',800,'John Doe (Serengeti)'],['I-00002','2025-10-21','Paid deposit to Serengeti Savannah Lodge','Expense',500,'Serengeti Savannah Lodge'],['I-00003','2025-05-05','Final payment – John Doe Safari','Income',700,'John Doe (Serengeti)']].map(a=>({id:a[0],date:a[1],descr:a[2],category:a[3],amount:a[4],ref:a[5],info:''})),
+bookings:[
+{id:'P-00001',client:'Blue Horizon Fund',group:3,tour:'Ngorongoro Farm House Standard Room (triple)',season:'Low Season',start:'2025-01-01',end:'2025-01-02',mk:.25,lv:'Arusha Car Hire Co.',lm:1,lmk:.25,av:'FlyXYZ',am:1,amk:.3,extras:[{d:'',u:50}],disc:.1,guide:'Evan T.',driver:'Bob K.',vehicle:'Minibus 1',status:'Confirmed'},
+{id:'P-00002',client:'Alpha Ventures',group:5,tour:'Ngorongoro Farm House Suite room (Double)',season:'High Season',start:'2025-06-30',end:'',mk:.1,lv:'Arusha Car Hire Co.',lm:1,lmk:.2,av:'',am:1,amk:.3,extras:[],disc:0,guide:'',driver:'',vehicle:'LandCruiser B',status:'Pending'},
+{id:'P-00003',client:'Blue Horizon Fund',group:3,tour:'Ngorongoro Farm House Standard Room (single)',season:'Low Season',start:'2025-01-01',end:'2025-01-02',mk:.1,lv:'Arusha Car Hire Co.',lm:1,lmk:.2,av:'',am:1,amk:.3,extras:[],disc:0,guide:'Evan T.',driver:'Bob K.',vehicle:'Minibus 1',status:'Pending'},
+{id:'P-00004',client:'Alpha Ventures',group:1,tour:'Ngorongoro Farm House Suite room (Double)',season:'Shoulder Season',start:'2025-01-01',end:'',mk:.1,lv:'Arusha Car Hire Co.',lm:3,lmk:.2,av:'',am:1,amk:.3,extras:[{d:'',u:20},{d:'',u:30},{d:'',u:70}],disc:.2,guide:'Alice M.',driver:'Bob K.',vehicle:'LandCruiser A',status:'Confirmed'}]};
+const SEASONS=['Low Season','Shoulder Season','High Season'],STAT=['Pending','Confirmed'];
+const E={
+clients:{t:'Clients',p:'C',f:[['name','Client Name'],['phone','Phone'],['email','Email'],['info','Additional Info']]},
+employees:{t:'Employees',p:'E',f:[['name','Employee Name'],['role','Role/Position',['Safari Guide','Driver','Mountain Guide','Office Manager']],['phone','Phone'],['email','Email'],['status','Status',['Active','Inactive']],['info','Additional Info']]},
+vendors:{t:'Vendors',p:'V',f:[['name','Vendor Name'],['category','Category',['Air transport','Land transport']],['contact','Contact Person'],['phone','Phone'],['email','Email'],['rate','Standard Rate ($)','number'],['info','Additional Info']]},
+tours:{t:'Tours',p:'T',f:[['name','Tour/Trip'],['type','Tour Type',['Serengeti Safari','Kilimanjaro Climb','Zanzibar Beach Tour','Cultural Day Trip','Adventure']],['low','Low Season Price','number'],['shoulder','Shoulder Season Price','number'],['high','High Season Price','number'],['info','Additional Info']]},
+assets:{t:'Assets',p:'A',f:[['name','Asset Name'],['category','Category',['Vehicle','Equipment']],['details','Details'],['bought','Purchase Date','date'],['status','Status',['Available','In Use','Maintenance']],['info','Additional Info']]},
+accounting:{t:'Accounting',p:'I',f:[['date','Date','date'],['descr','Description'],['category','Category',['Income','Expense']],['amount','Amount ($)','number'],['ref','Reference'],['info','Additional Info']]}};
+const KEY='safari_tour_v1';let db;try{db=JSON.parse(localStorage.getItem(KEY))}catch(e){}db=db||structuredClone(SEED);
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}};
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=v=>String(v??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const money=n=>'$'+(+n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1800)};
+const nextId=(p,a)=>p+'-'+String(Math.max(0,...a.map(x=>+x.id.split('-')[1]||0))+1).padStart(5,'0');
+function applyTheme(t){document.documentElement.dataset.theme=t;$('#themeBtn').textContent=t==='dark'?'☀️':'🌙';localStorage.setItem('theme',t)}
+function toggleTheme(){applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark')}
+applyTheme(localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+/* ---- calculations (always derived, never stored) ---- */
+function calc(b){const T=db.tours.find(t=>t.name==b.tour),V=n=>db.vendors.find(v=>v.name==n);
+const sp=T?+T[{'Low Season':'low','Shoulder Season':'shoulder','High Season':'high'}[b.season]]||0:0;
+const days=(b.start&&b.end)?Math.max(Math.round((new Date(b.end)-new Date(b.start))/864e5)+1,1):1,g=Math.max(+b.group||0,1);
+const trip=sp*days*g,tripM=trip*(1+(+b.mk||0)),lc=(V(b.lv)?.rate||0)*Math.max(+b.lm||0,1),ac=(V(b.av)?.rate||0)*Math.max(+b.am||0,1);
+const lcM=lc*(1+(+b.lmk||0)),acM=ac*(1+(+b.amk||0)),multi=(b.extras||[]).reduce((s,x)=>s+(+x.u||0)*g*days,0);
+const sub=tripM+lcM+multi+acM;return{sp,days,trip,tripM,lc,lcM,ac,acM,multi,sub,total:sub*(1-(+b.disc||0)),type:T?.type||''}}
+const nextService=a=>{const d=db.bookings.filter(b=>b.vehicle==a.name&&b.start&&b.start>new Date().toISOString().slice(0,10)).map(b=>b.start).sort()[0];return d||''};
+/* ---- navigation ---- */
+let tab='bookings',q='';
+const TABS=[['dash','Dashboard'],['bookings','Quotations'],...Object.entries(E).map(([k,v])=>[k,v.t])];
+function nav(){$('#nav').innerHTML=TABS.map(([k,l])=>`<button class="${k==tab?'on':''}" onclick="go('${k}')">${l}</button>`).join('')}
+function go(t){tab=t;q='';render()}
+function render(){nav();tab=='dash'?dash():tab=='bookings'?bookList():list(tab)}
+function bar(title,add){return`<div class="bar"><h2>${title}</h2><input placeholder="Search…" value="${esc(q)}" oninput="q=this.value;renderBody()"><button class="btn" onclick="${add}">+ New</button></div>`}
+let bodyFn=()=>'';
+function renderBody(){const el=$('#body');if(el)el.innerHTML=bodyFn()}
+function dash(){const c=db.bookings.map(b=>({b,c:calc(b)})),sum=a=>a.reduce((s,x)=>s+x.c.total,0);
+const inc=db.accounting.filter(x=>x.category=='Income').reduce((s,x)=>s+ +x.amount,0),exp=db.accounting.filter(x=>x.category=='Expense').reduce((s,x)=>s+ +x.amount,0);
+$('#main').innerHTML=`<div class="bar"><h2>Dashboard</h2></div><div class="kpis">
+<div class="kpi"><span>Total quotations</span><b>${c.length}</b></div>
+<div class="kpi"><span>Confirmed value</span><b>${money(sum(c.filter(x=>x.b.status=='Confirmed')))}</b></div>
+<div class="kpi"><span>Pending value</span><b>${money(sum(c.filter(x=>x.b.status=='Pending')))}</b></div>
+<div class="kpi"><span>Total income</span><b>${money(inc)}</b></div><div class="kpi"><span>Total expense</span><b>${money(exp)}</b></div>
+<div class="kpi"><span>Total profit</span><b>${money(inc-exp)}</b></div></div>
+<div class="bar"><button class="btn g" onclick="exportJSON()">⬇ Backup data</button><button class="btn g" onclick="$('#imp').click()">⬆ Restore backup</button><button class="btn d" onclick="resetData()">Reset to original data</button><input type="file" id="imp" hidden accept=".json" onchange="importJSON(this)"></div>`}
+function exportJSON(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,1)]));a.download='safari-backup.json';a.click()}
+function importJSON(i){const r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);save();if(SB)cloudPushAll().catch(e=>toast(e.message));render();toast('Restored')}catch(e){toast('Invalid file')}};r.readAsText(i.files[0])}
+function resetData(){if(confirm('Replace all data with the original workbook data?')){db=structuredClone(SEED);save();if(SB)cloudPushAll().catch(e=>toast(e.message));render();toast('Reset done')}}
+/* ---- generic CRUD lists ---- */
+function list(k){const C=E[k];bodyFn=()=>{const cols=C.f.filter(f=>f[0]!='info'),extra=k=='assets'?['Next Service']:[];
+let rows=db[k].filter(r=>JSON.stringify(r).toLowerCase().includes(q.toLowerCase()));
+if(k=='accounting')rows=[...rows].sort((a,b)=>a.date<b.date?1:-1);
+if(!rows.length)return'<div class="empty">No records</div>';
+return`<table><tr><th>ID</th>${cols.map(f=>`<th>${f[1]}</th>`).join('')}${extra.map(e=>`<th>${e}</th>`).join('')}<th></th></tr>`+rows.map(r=>`<tr><td>${r.id}</td>${cols.map(f=>`<td class="${f[2]=='number'?'n':''}">${['status','category'].includes(f[0])&&f[2]?`<span class="chip ${esc(r[f[0]])}">${esc(r[f[0]])}</span>`:f[2]=='number'?(+r[f[0]]||0).toLocaleString():esc(r[f[0]])}</td>`).join('')}${k=='assets'?`<td>${nextService(r)}</td>`:''}<td><button class="btn g s" onclick="edit('${k}','${r.id}')">Edit</button> <button class="btn d s" onclick="del('${k}','${r.id}')">Del</button></td></tr>`).join('')+'</table>'};
+let tot='';if(k=='accounting'){const i=db.accounting.filter(x=>x.category=='Income').reduce((s,x)=>s+ +x.amount,0),e=db.accounting.filter(x=>x.category=='Expense').reduce((s,x)=>s+ +x.amount,0);tot=`<div class="kpis"><div class="kpi"><span>Total Income</span><b>${money(i)}</b></div><div class="kpi"><span>Total Expense</span><b>${money(e)}</b></div><div class="kpi"><span>Total Profit</span><b>${money(i-e)}</b></div></div>`}
+$('#main').innerHTML=bar(C.t,`edit('${k}')`)+tot+'<div class="card" id="body"></div>';renderBody()}
+function edit(k,id){const C=E[k],r=id?db[k].find(x=>x.id==id):{id:nextId(C.p,db[k])};
+$('#dlg').innerHTML=`<form method="dialog" onsubmit="return false"><h2>${id?'Edit':'New'} ${C.t.replace(/s$/,'')} · ${r.id}</h2><div class="grid">${C.f.map(f=>`<div><label>${f[1]}</label>${Array.isArray(f[2])?sel(f[0],f[2],r[f[0]]):`<input name="${f[0]}" type="${f[2]||'text'}" ${f[2]=='number'?'step="any"':''} value="${esc(r[f[0]]??'')}">`}</div>`).join('')}</div>
+<div class="bar" style="margin-top:14px;justify-content:flex-end"><button class="btn g" onclick="$('#dlg').close()">Cancel</button><button class="btn" onclick="saveRec('${k}','${r.id}',${!!id})">Save</button></div></form>`;$('#dlg').showModal()}
+const sel=(n,o,v,blank)=>`<select name="${n}">${blank?'<option value=""></option>':''}${(v&&!o.includes(v)?[...o,v]:o).map(x=>`<option ${x==v?'selected':''}>${esc(x)}</option>`).join('')}</select>`;
+function saveRec(k,id,isEdit){const C=E[k],f=$('#dlg form'),r={id};C.f.forEach(([n,,t])=>{const v=f.elements[n].value;r[n]=t=='number'?(+v||0):v});
+if(!r[C.f[0][0]]&&k!='accounting'){toast('Name is required');return}
+if(isEdit)db[k]=db[k].map(x=>x.id==id?r:x);else db[k].push(r);save();cloudUp(k,r);$('#dlg').close();list(k);toast('Saved')}
+function del(k,id){if(confirm('Delete '+id+'?')){db[k]=db[k].filter(x=>x.id!=id);save();cloudDel(k,id);list(k);toast('Deleted')}}
+/* ---- quotations ---- */
+function bookList(){bodyFn=()=>{const rows=db.bookings.filter(r=>JSON.stringify(r).toLowerCase().includes(q.toLowerCase()));
+if(!rows.length)return'<div class="empty">No quotations</div>';
+return`<table><tr><th>ID</th><th>Client</th><th>Tour/Trip</th><th>Season</th><th>Start</th><th>Days</th><th>Group</th><th>Total</th><th>Status</th><th></th></tr>`+rows.map(b=>{const c=calc(b);return`<tr><td>${b.id}</td><td>${esc(b.client)}</td><td>${esc(b.tour)}</td><td>${b.season}</td><td>${b.start}</td><td>${c.days}</td><td>${b.group}</td><td class="n">${money(c.total)}</td><td><span class="chip ${b.status}">${b.status}</span></td><td><button class="btn g s" onclick="openB('${b.id}')">Edit</button> <button class="btn g s" onclick="printQ('${b.id}')">Print</button> <button class="btn d s" onclick="delB('${b.id}')">Del</button></td></tr>`}).join('')+'</table>'};
+$('#main').innerHTML=bar('Pricing & Quotations',"openB()")+'<div class="card" id="body"></div>';renderBody()}
+const names=a=>a.map(x=>x.name);
+function openB(id){const b=id?db.bookings.find(x=>x.id==id):{id:nextId('P',db.bookings),client:'',group:1,tour:'',season:'Low Season',start:'',end:'',mk:0,lv:'',lm:1,lmk:0,av:'',am:1,amk:0,extras:[],disc:0,guide:'',driver:'',vehicle:'',status:'Pending'};
+const N=(n,l,v,s)=>`<div><label>${l}</label><input name="${n}" type="number" step="${s||'any'}" min="0" value="${v}"></div>`,P=(n,l,v)=>N(n,l,+(v*100).toFixed(2));
+const ex=Array.from({length:13},(_,i)=>`<div class="ex"><input name="d${i}" placeholder="Description" value="${esc(b.extras[i]?.d||'')}"><input name="u${i}" type="number" step="any" placeholder="Unit $" value="${b.extras[i]?.u||''}"><input disabled class="xt" value=""></div>`).join('');
+$('#dlg').innerHTML=`<form onsubmit="return false" oninput="live()"><h2>${id?'Edit':'New'} Quotation · ${b.id}</h2>
+<h3>Tour / Trip</h3><div class="grid"><div><label>Client *</label>${sel('client',names(db.clients),b.client,1)}</div>${N('group','Group Size',b.group,1)}
+<div><label>Tour/Trip *</label>${sel('tour',names(db.tours),b.tour,1)}</div><div><label>Season</label>${sel('season',SEASONS,b.season)}</div>
+<div><label>Start Date</label><input name="start" type="date" value="${b.start}"></div><div><label>End Date</label><input name="end" type="date" value="${b.end}"></div>${P('mk','Tour Markup %',b.mk)}</div>
+<h3>Transportation</h3><div class="grid"><div><label>Land vendor</label>${sel('lv',names(db.vendors.filter(v=>v.category=='Land transport')),b.lv,1)}</div>${N('lm','Land multiplier',b.lm)}${P('lmk','Land markup %',b.lmk)}
+<div><label>Air vendor</label>${sel('av',names(db.vendors.filter(v=>v.category=='Air transport')),b.av,1)}</div>${N('am','Air multiplier',b.am)}${P('amk','Air markup %',b.amk)}</div>
+<h3>Extra details</h3><div class="grid"><div><label>Guide</label>${sel('guide',names(db.employees.filter(e=>/guide/i.test(e.role))),b.guide,1)}</div><div><label>Driver</label>${sel('driver',names(db.employees.filter(e=>e.role=='Driver')),b.driver,1)}</div><div><label>Vehicle</label>${sel('vehicle',names(db.assets.filter(a=>a.category=='Vehicle')),b.vehicle,1)}</div></div>
+<h3>Multi-day fees (unit cost × group × days)</h3>${ex}
+<div class="grid" style="margin-top:10px">${P('disc','Discount %',b.disc)}<div><label>Status</label>${sel('status',STAT,b.status)}</div></div><div class="sum" id="sum"></div>
+<div class="bar" style="margin-top:14px;justify-content:flex-end"><button class="btn g" onclick="$('#dlg').close()">Cancel</button><button class="btn g" onclick="printQ(null,collect('${b.id}'))">Print</button><button class="btn" onclick="saveB('${b.id}',${!!id})">Save</button></div></form>`;$('#dlg').showModal();live()}
+function collect(id){const f=$('#dlg form').elements,v=n=>f[n].value,p=n=>(+v(n)||0)/100;
+return{id,client:v('client'),group:+v('group')||1,tour:v('tour'),season:v('season'),start:v('start'),end:v('end'),mk:p('mk'),lv:v('lv'),lm:+v('lm')||1,lmk:p('lmk'),av:v('av'),am:+v('am')||1,amk:p('amk'),
+extras:Array.from({length:13},(_,i)=>({d:v('d'+i),u:+v('u'+i)||0})).filter(x=>x.d||x.u),disc:p('disc'),guide:v('guide'),driver:v('driver'),vehicle:v('vehicle'),status:v('status')}}
+function live(){const b=collect('x'),c=calc(b),row=(l,v)=>`<div><span>${l}</span><span>${money(v)}</span></div>`;
+$$('.xt').forEach((e,i)=>e.value=money((+$('#dlg form').elements['u'+i].value||0)*Math.max(b.group,1)*c.days));
+$('#sum').innerHTML=`<div><span>Season price · ${c.days} day(s) · ${esc(c.type)}</span><span>${money(c.sp)}</span></div>${row('Tour/Trip price',c.trip)}${row('After markup',c.tripM)}${row('Land transport (cost → after markup)',c.lcM)}${row('Air transport (after markup)',c.acM)}${row('Multi-day fees',c.multi)}${row('Subtotal',c.sub)}<div class="t"><span>Total after discount</span><span>${money(c.total)}</span></div>`}
+function saveB(id,isEdit){const b=collect(id);if(!b.client||!b.tour){toast('Client and Tour/Trip are required');return}
+if(isEdit)db.bookings=db.bookings.map(x=>x.id==id?b:x);else db.bookings.push(b);save();cloudUp('bookings',b);$('#dlg').close();bookList();toast('Saved')}
+function delB(id){if(confirm('Delete '+id+'?')){db.bookings=db.bookings.filter(x=>x.id!=id);save();cloudDel('bookings',id);bookList();toast('Deleted')}}
+function printQ(id,b){b=b||db.bookings.find(x=>x.id==id);const c=calc(b),r=(l,v)=>`<tr><td>${l}</td><td style="text-align:right">${money(v)}</td></tr>`,cl=db.clients.find(x=>x.name==b.client);
+const w=open('','_blank');w.document.write(`<title>Quotation ${b.id}</title><body style="font:14px system-ui;max-width:720px;margin:30px auto"><h1>Quotation ${b.id}</h1><p><b>${esc(b.client)}</b><br>${esc(cl?.email||'')} ${esc(cl?.phone||'')}</p>
+<p>${esc(b.tour)} (${esc(c.type)})<br>${b.season} · ${b.start||''} → ${b.end||''} · ${c.days} day(s) · Group of ${b.group}<br>Guide: ${esc(b.guide)} · Driver: ${esc(b.driver)} · Vehicle: ${esc(b.vehicle)}</p>
+<table width="100%" border="1" cellspacing="0" cellpadding="6">${r('Tour/Trip',c.tripM)}${b.lv?r('Land transport – '+esc(b.lv),c.lcM):''}${b.av?r('Air transport – '+esc(b.av),c.acM):''}${b.extras.map(x=>r(esc(x.d||'Additional fee'),x.u*Math.max(b.group,1)*c.days)).join('')}${b.disc?r('Discount ('+(b.disc*100)+'%)',-c.sub*b.disc):''}<tr><th>Total</th><th style="text-align:right">${money(c.total)}</th></tr></table><script>print()<\/script>`);w.document.close()}
+/* ---- Supabase cloud (optional) ---- */
+const MAP={clients:{},employees:{},vendors:{},tours:{low:'low_price',shoulder:'shoulder_price',high:'high_price'},assets:{bought:'purchase_date'},accounting:{date:'acc_date',ref:'reference'},bookings:{client:'client_name',group:'group_size',tour:'tour_name',start:'start_date',end:'end_date',mk:'markup',lv:'land_vendor',lm:'land_mult',lmk:'land_markup',av:'air_vendor',am:'air_mult',amk:'air_markup',disc:'discount'}};
+const DATES=['purchase_date','acc_date','start_date','end_date'],TBL=k=>'safari_'+k;
+const toDB=(k,r)=>{const o={};for(const[a,v]of Object.entries(r)){const c=MAP[k][a]||a;o[c]=DATES.includes(c)&&v===''?null:v}return o};
+const fromDB=(k,r)=>{const inv=Object.fromEntries(Object.entries(MAP[k]).map(([a,b])=>[b,a])),o={};for(const[c,v]of Object.entries(r))o[inv[c]||c]=v??'';if(k=='bookings')o.extras=r.extras||[];return o};
+let SB=null;try{SB=JSON.parse(localStorage.getItem('safari_sb'))}catch(e){}
+async function sb(path,opt={}){const r=await fetch(SB.url.replace(/\/$/,'')+'/rest/v1/'+path,{...opt,headers:{apikey:SB.key,Authorization:'Bearer '+SB.key,'Content-Type':'application/json',...(opt.headers||{})}});if(!r.ok)throw new Error((await r.text()).slice(0,160));const t=await r.text();return t?JSON.parse(t):null}
+function status(s,m){$('#st').className='dot '+s;$('#stt').textContent=m}
+async function cloudUp(k,rec){if(!SB)return;try{await sb(TBL(k),{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify([toDB(k,rec)])});status('ok','Cloud synced')}catch(e){status('err','Cloud error');toast('Cloud: '+e.message)}}
+async function cloudDel(k,id){if(!SB)return;try{await sb(TBL(k)+'?id=eq.'+encodeURIComponent(id),{method:'DELETE',headers:{Prefer:'return=minimal'}});status('ok','Cloud synced')}catch(e){status('err','Cloud error');toast('Cloud: '+e.message)}}
+async function cloudPushAll(){for(const k of Object.keys(MAP)){await sb(TBL(k)+'?id=neq.__none__',{method:'DELETE',headers:{Prefer:'return=minimal'}});if(db[k].length)await sb(TBL(k),{method:'POST',headers:{Prefer:'return=minimal'},body:JSON.stringify(db[k].map(r=>toDB(k,r)))})}}
+async function initCloud(){if(!SB){status('off','Local only');return}status('off','Connecting…');
+try{const d={};for(const k of Object.keys(MAP))d[k]=(await sb(TBL(k)+'?select=*&order=id')).map(r=>fromDB(k,r));
+const empty=Object.values(d).every(a=>!a.length);if(empty){if(confirm('Cloud database is empty. Upload the current data to it?'))await cloudPushAll()}else{db=d;save()}
+status('ok','Cloud synced');render()}catch(e){status('err','Cloud error');toast(e.message)}}
+function settings(){$('#dlg').innerHTML=`<h2>⚙️ Cloud database (Supabase)</h2><p style="color:var(--muted)">Paste the Project URL and anon public key from Supabase → Project Settings → API. Leave empty to stay local.</p>
+<label>Project URL</label><input id="sbu" placeholder="https://xxxx.supabase.co" value="${esc(SB?.url||'')}"><label style="margin-top:8px">anon public key</label><input id="sbk" value="${esc(SB?.key||'')}">
+<div class="bar" style="margin-top:14px;justify-content:flex-end"><button class="btn g" onclick="$('#dlg').close()">Close</button><button class="btn d" onclick="sbSave(true)">Disconnect</button><button class="btn" onclick="sbSave()">Save &amp; connect</button></div>`;$('#dlg').showModal()}
+function sbSave(off){if(off){SB=null;localStorage.removeItem('safari_sb')}else{SB={url:$('#sbu').value.trim(),key:$('#sbk').value.trim()};localStorage.setItem('safari_sb',JSON.stringify(SB))}$('#dlg').close();initCloud()}
+render();initCloud();
+</script></body></html>
