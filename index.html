@@ -26,9 +26,6 @@ body{margin:0;font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans
 .tb-sp{flex:1}
 .pill{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;font:inherit;cursor:pointer;position:relative}
 .pill:hover{border-color:var(--accent)}.pill.sq{padding:0;width:44px;justify-content:center}.hamb{display:none}
-#bellwrap{position:relative}#bn{position:absolute;top:-7px;right:-7px;min-width:20px;height:20px;border-radius:99px;background:var(--danger);color:var(--on-danger);font-size:11px;font-weight:700;display:grid;place-items:center;padding:0 5px}#bn[hidden]{display:none}
-#panel{position:absolute;right:0;top:calc(100% + 8px);width:min(360px,92vw);background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.2);padding:8px;z-index:30}
-#panel[hidden]{display:none}#panel h3{margin:8px 10px 4px}#panel button{display:block;width:100%;text-align:left;border:0;background:none;color:var(--text);padding:10px;border-radius:8px;cursor:pointer;font:inherit}#panel button:hover{background:var(--chip)}#panel small{display:block;color:var(--muted)}
 main{padding:12px 40px 40px;max-width:1280px}
 .ph{display:flex;gap:16px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;margin:8px 0 24px}.ph h1{margin:0;font-size:30px;letter-spacing:-.02em;line-height:1.15}.ph p{margin:6px 0 0;color:var(--muted)}
 .bar{display:flex;gap:8px;margin-bottom:14px;align-items:center;flex-wrap:wrap}
@@ -61,6 +58,28 @@ label{font-size:13px;color:var(--muted);display:block;margin-bottom:3px}h3{margi
 body.menu .sec{transform:none;box-shadow:0 0 40px rgba(0,0,0,.35)}body.menu .scrim{display:block;position:fixed;inset:0;background:#0007;z-index:35}
 .top{padding:12px 16px}main{padding:8px 16px 28px}.ph h1{font-size:24px}.kpis{gap:14px}.kpi b{font-size:26px}.ex{grid-template-columns:1fr 1fr}.ex input:first-child{grid-column:1/-1}dialog{padding:14px;width:100vw;max-width:100vw;border-radius:14px 14px 0 0;margin:auto 0 0}.tb-sp{display:none}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+.tbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.acts{display:inline-flex;gap:2px;padding:3px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.tb{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border:0;border-radius:8px;background:none;color:var(--text);font:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s,color .15s}
+.tb:hover:not(:disabled){background:var(--soft);color:var(--accent)}
+.tb.dg:hover:not(:disabled){background:color-mix(in srgb,var(--danger) 14%,transparent);color:var(--danger)}
+.tb:disabled{opacity:.4;cursor:not-allowed}
+.tb .ic{width:17px;height:17px}
+.selinfo{font-size:13px;color:var(--muted);min-width:78px;font-variant-numeric:tabular-nums}
+.ck{width:1%;padding-right:0!important}
+input[type=checkbox].rk{width:18px;height:18px;min-height:0;padding:0;accent-color:var(--accent);cursor:pointer;vertical-align:middle}
+tr.sel td{background:var(--soft)}
+#body tr[data-id]{cursor:pointer}
+@media (max-width:600px){.tb span{display:none}.tb{padding:0 10px}}
+.ab{width:34px;height:34px;border:0;border-radius:8px;background:none;color:var(--muted);display:grid;place-items:center;cursor:pointer;transition:background .15s,color .15s}
+.ab .ic{width:17px;height:17px}
+.ab:hover{background:var(--soft);color:var(--accent)}
+.ab.dg:hover{background:color-mix(in srgb,var(--danger) 14%,transparent);color:var(--danger)}
+@media (pointer:coarse){.ab{width:40px;height:40px}}
+.sec{transition:width .22s,padding .22s}
+.sidebtn{display:inline-flex}
+@media (min-width:901px){body.sidecol .sec{width:0;padding-left:0;padding-right:0;border-right:0;overflow:hidden}}
+@media (max-width:900px){.sidebtn{display:none}}
 </style></head><body>
 <div class="app">
 <aside class="prim" aria-label="Primary navigation"><div class="logo"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></div><div id="pn" style="display:contents"></div><div class="sp"></div><button onclick="settings()" aria-label="Cloud settings" title="Cloud settings"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></aside>
@@ -69,9 +88,9 @@ body.menu .sec{transform:none;box-shadow:0 0 40px rgba(0,0,0,.35)}body.menu .scr
 <div class="brand"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>Safari Tour Mgmt</div><nav id="nav" aria-label="Sections"></nav></aside>
 <div class="content"><div class="top">
 <button class="pill sq hamb" onclick="menu(true)" aria-label="Open menu"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+<button class="pill sq sidebtn" id="sideBtn" onclick="toggleSide()" aria-label="Collapse menu" title="Collapse menu" aria-expanded="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button>
 <div class="search"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="gs" type="search" placeholder="Search…" aria-label="Search current list" oninput="q=this.value;renderBody()"></div><div class="tb-sp"></div>
 <button class="pill" onclick="settings()" aria-label="Cloud database settings"><span id="st" class="dot off"></span><span id="stt" role="status" aria-live="polite">Local only</span></button>
-<div id="bellwrap"><button class="pill sq" id="bell" onclick="togglePanel(event)" aria-haspopup="true" aria-expanded="false" aria-label="Pending quotations"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg><span id="bn" hidden></span></button><div id="panel" hidden></div></div>
 <button class="pill sq" id="themeBtn" onclick="toggleTheme()" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
 </div><main id="main"></main></div></div><dialog id="dlg" aria-label="Details"></dialog><div id="toast" role="status" aria-live="polite"></div>
 <script>
@@ -117,6 +136,8 @@ const nextService=a=>{const d=db.bookings.filter(b=>b.vehicle==a.name&&b.start&&
 let tab='bookings',q='';
 const TABS=[['dash','Dashboard'],['bookings','Quotations'],...Object.entries(E).map(([k,v])=>[k,v.t])];
 const IC={dash:'<rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>',bookings:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/>',clients:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>',employees:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M15 9h3M15 13h3M6 17c.5-1.5 1.7-2 3-2s2.5.5 3 2"/>',vendors:'<path d="M1 3h15v13H1zM16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',tours:'<path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4z"/><path d="M8 2v16M16 6v16"/>',assets:'<path d="M5 17H3v-5l2-5h14l2 5v5h-2"/><circle cx="7.5" cy="17" r="2"/><circle cx="16.5" cy="17" r="2"/><path d="M3 12h18"/>',accounting:'<path d="M20 12V8a2 2 0 0 0-2-2H5a2 2 0 0 1 0-4h13"/><path d="M3 5v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/>'};
+const AI={edit:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',print:'<path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>',del:'<path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/>'};
+const ab=(t,l,fn,c='')=>`<button class="ab ${c}" title="${l}" aria-label="${l}" onclick="${fn}"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${AI[t]}</svg></button>`;
 const ico=k=>`<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg>`;
 const LBL={dash:'Dashboard',bookings:'Quotations',...Object.fromEntries(Object.entries(E).map(([k,v])=>[k,v.t]))};
 const GROUPS=[['Overview',['dash','bookings']],['Directory',['clients','employees','vendors']],['Operations',['tours','assets']],['Finance',['accounting']]];
@@ -125,20 +146,36 @@ const count=k=>k=='dash'?'':(db[k]||[]).length;
 function nav(){$('#nav').innerHTML=GROUPS.map(([g,ks])=>`<div class="sl">${g}</div>`+ks.map(k=>`<button class="${k==tab?'on':''}" ${k==tab?'aria-current="page"':''} onclick="go('${k}')">${ico(k)}<span>${LBL[k]}</span>${count(k)!==''?`<span class="b">${count(k)}</span>`:''}</button>`).join('')).join('');
 $('#pn').innerHTML=GROUPS.flatMap(g=>g[1]).map(k=>`<button class="${k==tab?'on':''}" ${k==tab?'aria-current="page"':''} onclick="go('${k}')" aria-label="${LBL[k]}" title="${LBL[k]}">${ico(k)}</button>`).join('');
 $('#gs').disabled=tab=='dash';$('#gs').placeholder=tab=='dash'?'Search is available on list pages':'Search '+LBL[tab].toLowerCase()+'…'}
-function bell(){const n=db.bookings.filter(b=>b.status=='Pending').length;$('#bn').textContent=n;$('#bn').hidden=!n;$('#bell').setAttribute('aria-label',n+' pending quotation'+(n==1?'':'s'))}
-function chrome(){nav();bell()}
-function togglePanel(e){e.stopPropagation();const el=$('#panel');if(!el.hidden){el.hidden=true;$('#bell').setAttribute('aria-expanded','false');return}
-const p=db.bookings.filter(b=>b.status=='Pending');el.innerHTML='<h3>Pending quotations</h3>'+(p.length?p.map(b=>`<button onclick="openPending('${b.id}')"><b>${b.id}</b> · ${esc(b.client)}<small>${esc(b.tour)} · ${money(calc(b).total)}</small></button>`).join(''):'<div class="empty">Nothing pending</div>');el.hidden=false;$('#bell').setAttribute('aria-expanded','true')}
-function openPending(id){$('#panel').hidden=true;go('bookings');openB(id)}
+function chrome(){nav()}
 const menu=o=>document.body.classList.toggle('menu',o);
-document.addEventListener('click',e=>{if(!e.target.closest('#bellwrap')){$('#panel').hidden=true;$('#bell').setAttribute('aria-expanded','false')}});
-document.addEventListener('keydown',e=>{if(e.key=='Escape'){$('#panel').hidden=true;menu(false)}});
-function go(t){tab=t;q='';$('#gs').value='';menu(false);window.scrollTo(0,0);render()}
-function render(){tab=='dash'?dash():tab=='bookings'?bookList():list(tab)}
-function head(add){const[t,d]=PAGE[tab];chrome();return`<div class="ph"><div><h1>${t}</h1><p>${d}</p></div>${add?`<button class="btn" onclick="${add}">+ New</button>`:''}</div>`}
+document.addEventListener('keydown',e=>{if(e.key=='Escape'){menu(false)}});
+function toggleSide(){const c=document.body.classList.toggle('sidecol');try{localStorage.setItem('sidecol',c?'1':'0')}catch(e){}syncSide()}
+function syncSide(){const c=document.body.classList.contains('sidecol'),b=$('#sideBtn');b.setAttribute('aria-expanded',!c);b.title=b.ariaLabel=c?'Expand menu':'Collapse menu'}
+try{if(localStorage.getItem('sidecol')=='1')document.body.classList.add('sidecol')}catch(e){}
+function go(t){tab=t;q='';picked=new Set();$('#gs').value='';menu(false);window.scrollTo(0,0);render()}
+function render(){syncSide();tab=='dash'?dash():tab=='bookings'?bookList():list(tab)}
+function head(add){const[t,d]=PAGE[tab];chrome();return`<div class="ph"><div><h1>${t}</h1><p>${d}</p></div>${add?`<div class="tbar"><button class="btn" onclick="${add}">+ New</button><div class="acts" role="toolbar" aria-label="Actions for selected rows"><button class="tb" id="bEdit" onclick="actEdit()" title="Edit selected">${tbi('edit')}<span>Edit</span></button>${tab=='bookings'?`<button class="tb" id="bPrint" onclick="actPrint()" title="Print selected">${tbi('print')}<span>Print</span></button>`:''}<button class="tb dg" id="bDel" onclick="actDel()" title="Delete selected">${tbi('del')}<span>Delete</span></button></div><span class="selinfo" id="selinfo"></span></div>`:''}</div>`}
 function bar(title,add){return head(add)}
 let bodyFn=()=>'';
-function renderBody(){const el=$('#body');if(el)el.innerHTML=bodyFn()}
+const tbi=t=>`<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${AI[t]}</svg>`;
+let picked=new Set(),vis=[];
+const curKey=()=>tab=='bookings'?'bookings':tab;
+function ckTh(){return`<th class="ck"><input type="checkbox" class="rk" id="ckAll" aria-label="Select all" onchange="togAll(this.checked)"></th>`}
+function ckTd(id){return`<td class="ck"><input type="checkbox" class="rk" aria-label="Select ${id}" ${picked.has(id)?'checked':''} onchange="tog('${id}',this.checked)"></td>`}
+function tog(id,on){on?picked.add(id):picked.delete(id);const tr=event.target.closest('tr');if(tr)tr.classList.toggle('sel',on);updSel()}
+document.addEventListener('click',e=>{const tr=e.target.closest('#body tr[data-id]');if(!tr||e.target.closest('input,button,a,select,label'))return;
+picked=new Set([tr.dataset.id]);$$('#body tr[data-id]').forEach(r=>{const on=picked.has(r.dataset.id);r.classList.toggle('sel',on);const c=r.querySelector('input.rk');if(c)c.checked=on});updSel()});
+function togAll(on){vis.forEach(id=>on?picked.add(id):picked.delete(id));$$('#body input.rk[aria-label^="Select "]').forEach(c=>{c.checked=on;c.closest('tr').classList.toggle('sel',on)});updSel()}
+function updSel(){const ids=new Set(db[curKey()]?.map(r=>r.id)||[]);picked=new Set([...picked].filter(i=>ids.has(i)));const n=picked.size,g=id=>document.getElementById(id);
+if(g('selinfo'))g('selinfo').textContent=n?n+' selected':'';
+if(g('bEdit'))g('bEdit').disabled=n!=1;if(g('bPrint'))g('bPrint').disabled=n<1;if(g('bDel'))g('bDel').disabled=n<1;
+const a=g('ckAll');if(a){const v=vis.filter(i=>picked.has(i)).length;a.checked=vis.length>0&&v==vis.length;a.indeterminate=v>0&&v<vis.length}}
+function actEdit(){if(picked.size!=1)return;const id=[...picked][0];tab=='bookings'?openB(id):edit(tab,id)}
+function actPrint(){if(!picked.size)return;printMany([...picked])}
+function actDel(){const k=curKey(),ids=[...picked];if(!ids.length)return;
+if(!confirm(ids.length==1?'Delete '+ids[0]+'?':'Delete '+ids.length+' selected records?'))return;
+db[k]=db[k].filter(x=>!picked.has(x.id));save();ids.forEach(id=>cloudDel(k,id));picked.clear();render();toast(ids.length==1?'Deleted':ids.length+' deleted')}
+function renderBody(){const el=$('#body');if(el)el.innerHTML=bodyFn();updSel()}
 function dash(){const c=db.bookings.map(b=>({b,c:calc(b)})),sum=a=>a.reduce((s,x)=>s+x.c.total,0),cf=c.filter(x=>x.b.status=='Confirmed'),pd=c.filter(x=>x.b.status=='Pending');
 const ai=db.accounting.filter(x=>x.category=='Income'),ae=db.accounting.filter(x=>x.category=='Expense'),inc=ai.reduce((s,x)=>s+ +x.amount,0),exp=ae.reduce((s,x)=>s+ +x.amount,0);
 const K=(l,v,s,to,cls)=>`<button class="kpi" onclick="go('${to}')"><span>${l}</span><b class="${cls||''}">${v}</b><small class="${cls||''}">${s}</small></button>`;
@@ -151,8 +188,8 @@ function resetData(){if(confirm('Replace all data with the original workbook dat
 function list(k){const C=E[k];bodyFn=()=>{const cols=C.f.filter(f=>f[0]!='info'),extra=k=='assets'?['Next Service']:[];
 let rows=db[k].filter(r=>JSON.stringify(r).toLowerCase().includes(q.toLowerCase()));
 if(k=='accounting')rows=[...rows].sort((a,b)=>a.date<b.date?1:-1);
-if(!rows.length)return'<div class="empty">No records</div>';
-return`<table><tr><th>ID</th>${cols.map(f=>`<th>${f[1]}</th>`).join('')}${extra.map(e=>`<th>${e}</th>`).join('')}<th></th></tr>`+rows.map(r=>`<tr><td>${r.id}</td>${cols.map(f=>`<td class="${f[2]=='number'?'n':''}">${['status','category'].includes(f[0])&&f[2]?`<span class="chip ${esc(r[f[0]])}">${esc(r[f[0]])}</span>`:f[2]=='number'?(+r[f[0]]||0).toLocaleString():esc(r[f[0]])}</td>`).join('')}${k=='assets'?`<td>${nextService(r)}</td>`:''}<td><button class="btn g s" onclick="edit('${k}','${r.id}')">Edit</button> <button class="btn d s" onclick="del('${k}','${r.id}')">Delete</button></td></tr>`).join('')+'</table>'};
+if(!rows.length){vis=[];return'<div class="empty">No records</div>'}
+vis=rows.map(r=>r.id);return`<table><tr>${ckTh()}<th>ID</th>${cols.map(f=>`<th>${f[1]}</th>`).join('')}${extra.map(e=>`<th>${e}</th>`).join('')}</tr>`+rows.map(r=>`<tr data-id="${r.id}" class="${picked.has(r.id)?'sel':''}">${ckTd(r.id)}<td>${r.id}</td>${cols.map(f=>`<td class="${f[2]=='number'?'n':''}">${['status','category'].includes(f[0])&&f[2]?`<span class="chip ${esc(r[f[0]])}">${esc(r[f[0]])}</span>`:f[2]=='number'?(+r[f[0]]||0).toLocaleString():esc(r[f[0]])}</td>`).join('')}${k=='assets'?`<td>${nextService(r)}</td>`:''}</tr>`).join('')+'</table>'};
 let tot='';if(k=='accounting'){const i=db.accounting.filter(x=>x.category=='Income').reduce((s,x)=>s+ +x.amount,0),e=db.accounting.filter(x=>x.category=='Expense').reduce((s,x)=>s+ +x.amount,0);tot=`<div class="kpis"><div class="kpi"><span>Total Income</span><b>${money(i)}</b></div><div class="kpi"><span>Total Expense</span><b>${money(e)}</b></div><div class="kpi"><span>Total Profit</span><b>${money(i-e)}</b></div></div>`}
 $('#main').innerHTML=bar(C.t,`edit('${k}')`)+tot+'<div class="card" id="body"></div>';renderBody()}
 function edit(k,id){const C=E[k],r=id?db[k].find(x=>x.id==id):{id:nextId(C.p,db[k])};
@@ -165,8 +202,8 @@ if(isEdit)db[k]=db[k].map(x=>x.id==id?r:x);else db[k].push(r);save();cloudUp(k,r
 function del(k,id){if(confirm('Delete '+id+'?')){db[k]=db[k].filter(x=>x.id!=id);save();cloudDel(k,id);list(k);toast('Deleted')}}
 /* ---- quotations ---- */
 function bookList(){bodyFn=()=>{const rows=db.bookings.filter(r=>JSON.stringify(r).toLowerCase().includes(q.toLowerCase()));
-if(!rows.length)return'<div class="empty">No quotations</div>';
-return`<table><tr><th>ID</th><th>Client</th><th>Tour/Trip</th><th>Season</th><th>Start</th><th>Days</th><th>Group</th><th>Total</th><th>Status</th><th></th></tr>`+rows.map(b=>{const c=calc(b);return`<tr><td>${b.id}</td><td>${esc(b.client)}</td><td>${esc(b.tour)}</td><td>${b.season}</td><td>${b.start}</td><td>${c.days}</td><td>${b.group}</td><td class="n">${money(c.total)}</td><td><span class="chip ${b.status}">${b.status}</span></td><td><button class="btn g s" onclick="openB('${b.id}')">Edit</button> <button class="btn g s" onclick="printQ('${b.id}')">Print</button> <button class="btn d s" onclick="delB('${b.id}')">Delete</button></td></tr>`}).join('')+'</table>'};
+if(!rows.length){vis=[];return'<div class="empty">No quotations</div>'}
+vis=rows.map(r=>r.id);return`<table><tr>${ckTh()}<th>ID</th><th>Client</th><th>Tour/Trip</th><th>Season</th><th>Start</th><th>Days</th><th>Group</th><th>Total</th><th>Status</th></tr>`+rows.map(b=>{const c=calc(b);return`<tr data-id="${b.id}" class="${picked.has(b.id)?'sel':''}">${ckTd(b.id)}<td>${b.id}</td><td>${esc(b.client)}</td><td>${esc(b.tour)}</td><td>${b.season}</td><td>${b.start}</td><td>${c.days}</td><td>${b.group}</td><td class="n">${money(c.total)}</td><td><span class="chip ${b.status}">${b.status}</span></td></tr>`}).join('')+'</table>'};
 $('#main').innerHTML=bar('Pricing & Quotations',"openB()")+'<div class="card" id="body"></div>';renderBody()}
 const names=a=>a.map(x=>x.name);
 function openB(id){const b=id?db.bookings.find(x=>x.id==id):{id:nextId('P',db.bookings),client:'',group:1,tour:'',season:'Low Season',start:'',end:'',mk:0,lv:'',lm:1,lmk:0,av:'',am:1,amk:0,extras:[],disc:0,guide:'',driver:'',vehicle:'',status:'Pending'};
@@ -191,6 +228,13 @@ $('#sum').innerHTML=`<div><span>Season price · ${c.days} day(s) · ${esc(c.type
 function saveB(id,isEdit){const b=collect(id);if(!b.client||!b.tour){toast('Client and Tour/Trip are required');return}
 if(isEdit)db.bookings=db.bookings.map(x=>x.id==id?b:x);else db.bookings.push(b);save();cloudUp('bookings',b);$('#dlg').close();bookList();toast('Saved')}
 function delB(id){if(confirm('Delete '+id+'?')){db.bookings=db.bookings.filter(x=>x.id!=id);save();cloudDel('bookings',id);bookList();toast('Deleted')}}
+function printMany(ids){const bs=ids.map(i=>db.bookings.find(x=>x.id==i)).filter(Boolean);if(!bs.length)return;
+const w=open('','_blank');if(!w){toast('Allow pop-ups to print');return}
+w.document.write('<title>Quotations</title><body style="font:14px system-ui;max-width:720px;margin:30px auto">'+bs.map((b,i)=>`<div style="${i?'page-break-before:always;':''}">${qDoc(b)}</div>`).join('')+'<script>print()<\/script>');w.document.close()}
+function qDoc(b){const c=calc(b),r=(l,v)=>`<tr><td>${l}</td><td style="text-align:right">${money(v)}</td></tr>`,cl=db.clients.find(x=>x.name==b.client);
+return`<h1>Quotation ${b.id}</h1><p><b>${esc(b.client)}</b><br>${esc(cl?.email||'')} ${esc(cl?.phone||'')}</p>
+<p>${esc(b.tour)} (${esc(c.type)})<br>${b.season} · ${b.start||''} → ${b.end||''} · ${c.days} day(s) · Group of ${b.group}<br>Guide: ${esc(b.guide)} · Driver: ${esc(b.driver)} · Vehicle: ${esc(b.vehicle)}</p>
+<table width="100%" border="1" cellspacing="0" cellpadding="6">${r('Tour/Trip',c.tripM)}${b.lv?r('Land transport – '+esc(b.lv),c.lcM):''}${b.av?r('Air transport – '+esc(b.av),c.acM):''}${b.extras.map(x=>r(esc(x.d||'Additional fee'),x.u*Math.max(b.group,1)*c.days)).join('')}${b.disc?r('Discount ('+(b.disc*100)+'%)',-c.sub*b.disc):''}<tr><th>Total</th><th style="text-align:right">${money(c.total)}</th></tr></table>`}
 function printQ(id,b){b=b||db.bookings.find(x=>x.id==id);const c=calc(b),r=(l,v)=>`<tr><td>${l}</td><td style="text-align:right">${money(v)}</td></tr>`,cl=db.clients.find(x=>x.name==b.client);
 const w=open('','_blank');w.document.write(`<title>Quotation ${b.id}</title><body style="font:14px system-ui;max-width:720px;margin:30px auto"><h1>Quotation ${b.id}</h1><p><b>${esc(b.client)}</b><br>${esc(cl?.email||'')} ${esc(cl?.phone||'')}</p>
 <p>${esc(b.tour)} (${esc(c.type)})<br>${b.season} · ${b.start||''} → ${b.end||''} · ${c.days} day(s) · Group of ${b.group}<br>Guide: ${esc(b.guide)} · Driver: ${esc(b.driver)} · Vehicle: ${esc(b.vehicle)}</p>
